@@ -38,10 +38,7 @@ func TestCreateConfiguration(t *testing.T) {
 			for k, v := range tc.env {
 				os.Setenv(k, v)
 			}
-
-			defer func() {
-				os.Clearenv()
-			}()
+			defer os.Clearenv()
 
 			got, err := CreateConfiguration()
 

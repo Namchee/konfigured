@@ -12,9 +12,7 @@ func TestReadEnvString(t *testing.T) {
 	value := "access-token"
 
 	os.Setenv(key, value)
-	defer func() {
-		os.Clearenv()
-	}()
+	defer os.Clearenv()
 
 	res := ReadEnvString(key)
 	assert.Equal(t, value, res)
