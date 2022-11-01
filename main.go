@@ -51,9 +51,15 @@ func main() {
 		errorLogger.Fatalf("Failed to read repository metadata: %s", err.Error())
 	}
 
-	pullRequest, _, err := client.PullRequests.Get(ctx, meta.Owner, meta.Name, event.Number)
+	changes, _, err := client.PullRequests.ListFiles(
+		ctx,
+		meta.Owner,
+		meta.Name,
+		event.Number,
+		&github.ListOptions{},
+	)
 
 	if err != nil {
-		errorLogger.Fatalf("Failed to fetch pull request data: %s", err.Error())
+		errorLogger.Fatalf("Failed to fetch list of file changes: %s", err.Error())
 	}
 }
