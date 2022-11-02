@@ -18,6 +18,24 @@ func TestIsValid(t *testing.T) {
 		want bool
 	}{
 		{
+			name: "invalid INI file",
+			args: args{
+				ext:     "ini",
+				content: `key=:=''value"`,
+			},
+			want: false,
+		},
+		{
+			name: "valid INI file",
+			args: args{
+				ext: "ini",
+				content: `[ample]
+key="value"
+num=123`,
+			},
+			want: true,
+		},
+		{
 			name: "invalid JSON file",
 			args: args{
 				ext:     "json",
@@ -51,6 +69,35 @@ foo:
 				content: `
 foo:
   - bar`,
+			},
+			want: true,
+		},
+		{
+			name: "invalid TOML file",
+			args: args{
+				ext: "toml",
+				content: `key = "value"
+[]`,
+			},
+			want: false,
+		},
+		{
+			name: "valid TOML file",
+			args: args{
+				ext: "toml",
+				content: `foo = "bar"
+
+[map]
+key = "value"
+bilangan = 123
+
+[a.b]
+c = [1, 2, 3]
+
+[[items]]
+
+[[items]]
+name = "eggs"`,
 			},
 			want: true,
 		},
