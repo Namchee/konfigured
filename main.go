@@ -51,7 +51,7 @@ func main() {
 		errorLogger.Fatalf("Failed to read repository metadata: %s", err.Error())
 	}
 
-	changes, _, err := client.PullRequests.ListFiles(
+	files, _, err := client.PullRequests.ListFiles(
 		ctx,
 		meta.Owner,
 		meta.Name,
@@ -61,5 +61,13 @@ func main() {
 
 	if err != nil {
 		errorLogger.Fatalf("Failed to fetch list of file changes: %s", err.Error())
+	}
+
+	supportedFiles := utils.GetSupportedFiles(files)
+
+	infoLogger.Printf("Found %d supported configuration files\n", len(supportedFiles))
+
+	if len(supportedFiles) == 0 {
+		return
 	}
 }
