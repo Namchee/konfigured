@@ -1,4 +1,4 @@
-package utils
+package internal
 
 import (
 	"testing"
@@ -97,7 +97,7 @@ name = "eggs"`,
 
 	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
-			got := IsValid(tc.args.ext, tc.args.content)
+			got := isValid(tc.args.ext, tc.args.content)
 
 			assert.Equal(t, tc.want, got)
 		})

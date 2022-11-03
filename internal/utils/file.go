@@ -2,6 +2,7 @@ package utils
 
 import (
 	"regexp"
+	"strings"
 
 	"github.com/google/go-github/v48/github"
 )
@@ -10,7 +11,7 @@ var (
 	extensions = regexp.MustCompile(`\.(ini|json|yaml|toml)$`)
 )
 
-// GetSuupportedFiles returns list of of supported configuration files
+// GetSupportedFiles returns list of of supported configuration files
 func GetSupportedFiles(files []*github.CommitFile) []*github.CommitFile {
 	supportedFiles := []*github.CommitFile{}
 
@@ -21,4 +22,11 @@ func GetSupportedFiles(files []*github.CommitFile) []*github.CommitFile {
 	}
 
 	return supportedFiles
+}
+
+// GetExtension returns file extension
+func GetExtension(name string) string {
+	token := strings.Split(name, ".")
+
+	return token[len(token)-1]
 }
