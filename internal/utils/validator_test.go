@@ -18,14 +18,6 @@ func TestIsValid(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "invalid INI file",
-			args: args{
-				ext:     "ini",
-				content: `key=:=''value"`,
-			},
-			want: false,
-		},
-		{
 			name: "valid INI file",
 			args: args{
 				ext: "ini",
