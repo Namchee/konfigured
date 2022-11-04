@@ -3,6 +3,8 @@ package internal
 import (
 	"testing"
 
+	"github.com/google/go-github/v48/github"
+	"github.com/jarcoal/httpmock"
 	"gotest.tools/v3/assert"
 )
 
@@ -102,4 +104,50 @@ name = "eggs"`,
 			assert.Equal(t, tc.want, got)
 		})
 	}
+}
+
+func TestValidateConfigurationFiles(t *testing.T) {
+	args := []*github.CommitFile{
+		{
+			Filename: github.String("foobar.json"),
+			RawURL:   github.String("https://www.google.com"),
+		},
+		{
+			Filename: github.String("sample.toml"),
+			RawURL:   github.String("https://www.yahoo.com"),
+		},
+		{
+			Filename: github.String("config.yaml"),
+			RawURL:   github.String("https://www.facebook.com"),
+		},
+	}
+
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder(
+		"GET",
+		"https://www.google.com",
+		httpmock.NewBytesResponder(200, []byte("{")),
+	)
+
+	httpmock.RegisterResponder(
+		"GET",
+		"https://www.yahoo.com",
+		httpmock.NewBytesResponder(200, []byte(`key = "value"`)),
+	)
+
+	httpmock.RegisterResponder(
+		"GET",
+		"https://www.facebook.com",
+		httpmock.NewBytesResponder(200, []byte("foo: bar")),
+	)
+
+	result := ValidateConfigurationFiles(args)
+
+	assert.Equal(t, 3, len(result))
+	assert.Equal(t, 3, httpmock.GetTotalCallCount())
+	assert.Equal(t, result["foobar.json"], false)
+	assert.Equal(t, result["sample.toml"], true)
+	assert.Equal(t, result["config.yaml"], true)
 }

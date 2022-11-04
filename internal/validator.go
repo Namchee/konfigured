@@ -16,8 +16,8 @@ type ValidationResult struct {
 	isValid bool
 }
 
-// FindMalformedFiles returns a list of malformed configuration files
-func FindMalformedFiles(files []*github.CommitFile) map[string]bool {
+// ValidateConfigurationFiles returns a mapping of configuration file validity
+func ValidateConfigurationFiles(files []*github.CommitFile) map[string]bool {
 	filemap := map[string]bool{}
 
 	pool := make(chan ValidationResult, len(files))
