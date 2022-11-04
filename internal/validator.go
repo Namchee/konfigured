@@ -2,7 +2,7 @@ package internal
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"sync"
 
@@ -59,7 +59,7 @@ func fetchFileContent(url string) string {
 
 	response, _ := client.Do(req)
 
-	body, _ := ioutil.ReadAll(response.Body)
+	body, _ := io.ReadAll(response.Body)
 
 	return string(body)
 }
