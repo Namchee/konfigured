@@ -4,3 +4,9 @@ author: Cristopher Namchee
 inputs:
   token: GitHub access token
   required: true
+runs:
+  using: docker
+  image: "Dockerfile"
+branding:
+  icon: "settings"
+  color: "white"
