@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/Namchee/setel/internal/utils"
+	"github.com/Namchee/atur/internal/utils"
 	"github.com/google/go-github/v48/github"
 	"github.com/spf13/viper"
 )

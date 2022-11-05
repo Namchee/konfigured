@@ -1,4 +1,4 @@
-FROM golang:1.18
+FROM golang:1.19
 
 WORKDIR /ci
 
@@ -9,8 +9,8 @@ RUN go mod download
 
 COPY . .
 
-RUN  go build -a -o setel .
+RUN  go build -a -o atur .
 
-RUN chmod +x /ci/setel
+RUN chmod +x /ci/atur
 
-CMD ["/ci/setel"]
+CMD ["/ci/atur"]

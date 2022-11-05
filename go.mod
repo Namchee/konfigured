@@ -1,4 +1,4 @@
-module github.com/Namchee/setel
+module github.com/Namchee/atur
 
 go 1.19
 

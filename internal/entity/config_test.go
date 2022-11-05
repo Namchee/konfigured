@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Namchee/setel/internal/constant"
+	"github.com/Namchee/atur/internal/constant"
 	"gotest.tools/v3/assert"
 )
 
