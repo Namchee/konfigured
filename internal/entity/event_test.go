@@ -65,7 +65,7 @@ func TestReadEvent(t *testing.T) {
 
 			got, err := ReadEvent(mock)
 
-			assert.Equal(t, tc.want.event, got)
+			assert.DeepEqual(t, tc.want.event, got)
 			assert.Equal(t, tc.want.err, err)
 		})
 	}

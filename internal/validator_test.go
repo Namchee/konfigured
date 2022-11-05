@@ -67,6 +67,16 @@ foo:
 			want: true,
 		},
 		{
+			name: "YML alias",
+			args: args{
+				ext: "yml",
+				content: `
+foo:
+  - bar`,
+			},
+			want: true,
+		},
+		{
 			name: "invalid TOML file",
 			args: args{
 				ext: "toml",
