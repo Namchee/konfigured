@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	extensions = regexp.MustCompile(`\.(ini|json|yaml|toml)$`)
+	extensions = regexp.MustCompile(`\.(ini|json|yaml|yml|toml)$`)
 )
 
 // GetSupportedFiles returns list of of supported configuration files

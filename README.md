@@ -1,2 +1,50 @@
-# setel
-Verify configuration file formatting
+# Setel
+
+[![Go Version Badge](https://img.shields.io/github/go-mod/go-version/namchee/setel)](https://github.com/Namchee/setel) [![Go Report Card](https://goreportcard.com/badge/github.com/Namchee/setel)](https://goreportcard.com/report/github.com/Namchee/setel)
+
+Prevent malformed configuration files from being merged to your project. No more breaking builds caused by bad configuration files.
+
+## Usage 
+
+You can integrate Setel to your existing GitHub action workflow by using `Namchee/setel@<version>` in one of your jobs using the YAML syntax.
+
+Below is the example of integrating Setel to your workflow in your GitHub action workflow.
+
+```yml
+on:
+  pull_request:
+
+jobs:
+  cpr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate configuration file
+        uses: Namchee/setel@v(version)
+        with:
+          access_token: YOUR_GITHUB_ACCESS_TOKEN_HERE
+```
+
+Please refer to [GitHub workflow syntax](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#about-yaml-syntax-for-workflows) for more advanced usage.
+
+> Access token is **required**. Please generate one or use `${{ secrets.GITHUB_TOKEN }}` as your access token and the `github-actions` bot will run the job for you.
+
+## Supported File Type
+
+Below are the currently supported configuration files that will be validated by Setel:
+
+- `.ini`
+- `.json`
+- `.yaml`, `.yml`
+- `.toml`
+
+## Inputs
+
+You can customize this actions with these following options (fill it on `with` section):
+
+| **Name**              | **Required?** | **Default Value**                       | **Description**                                                                                                                                                                                                                                                                                                            |
+| --------------------- | ------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `token`        | `true`        |                                         | [GitHub access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) to interact with the GitHub API. It is recommended to store this token with [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). **To support automatic close, labeling, and comment report, please grant a write access to the token** |
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE)
