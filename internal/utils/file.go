@@ -24,7 +24,7 @@ func GetSupportedFiles(files []*github.CommitFile) []*github.CommitFile {
 	return supportedFiles
 }
 
-// GetExtension returns file extension
+// GetExtension returns file extension from its name
 func GetExtension(name string) string {
 	token := strings.Split(name, ".")
 

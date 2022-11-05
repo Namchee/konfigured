@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/Namchee/setel/internal"
 	"github.com/Namchee/setel/internal/entity"
 	"github.com/Namchee/setel/internal/utils"
 	"github.com/google/go-github/v48/github"
@@ -69,5 +70,20 @@ func main() {
 
 	if len(supportedFiles) == 0 {
 		return
+	}
+
+	result := internal.ValidateConfigurationFiles(supportedFiles)
+	invalids := utils.FilterKeysByValue(result, false)
+
+	if len(invalids) == 0 {
+		infoLogger.Println("All configuration files are valid!")
+		os.Exit(0)
+	}
+
+	infoLogger.Printf("Found %d malformed configuration files\n", len(invalids))
+	infoLogger.Println("Below are the list of malformed configuration files:")
+
+	for name := range invalids {
+		infoLogger.Println(name)
 	}
 }
