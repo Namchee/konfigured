@@ -1,14 +1,14 @@
-# Atur
+# Konfigured
 
-[![Go Version Badge](https://img.shields.io/github/go-mod/go-version/namchee/atur)](https://github.com/Namchee/aturl) [![Go Report Card](https://goreportcard.com/badge/github.com/Namchee/atur)](https://goreportcard.com/report/github.com/Namchee/atur)
+[![Go Version Badge](https://img.shields.io/github/go-mod/go-version/namchee/konfigured)](https://github.com/Namchee/konfigured) [![Go Report Card](https://goreportcard.com/badge/github.com/Namchee/konfigured)](https://goreportcard.com/report/github.com/Namchee/konfigured)
 
 Prevent malformed configuration files from being merged to your project. No more breaking builds caused by bad configuration files.
 
 ## Usage 
 
-You can integrate Atur to your existing GitHub action workflow by using `Namchee/atur@<version>` in one of your jobs using the YAML syntax.
+You can integrate Konfigured to your existing GitHub action workflow by using `Namchee/konfigured@<version>` in one of your jobs using the YAML syntax.
 
-Below is the example of integrating Atur to your workflow in your GitHub action workflow.
+Below is the example of integrating Konfigured to your workflow in your GitHub action workflow.
 
 ```yml
 on:
@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Validate configuration file
-        uses: Namchee/atur@v(version)
+        uses: Namchee/konfigured@v(version)
         with:
-          access_token: YOUR_GITHUB_ACCESS_TOKEN_HERE
+          access_token: <YOUR_GITHUB_ACCESS_TOKEN_HERE>
 ```
 
 Please refer to [GitHub workflow syntax](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#about-yaml-syntax-for-workflows) for more advanced usage.
@@ -30,7 +30,7 @@ Please refer to [GitHub workflow syntax](https://docs.github.com/en/free-pro-tea
 
 ## Supported File Type
 
-Below are the currently supported configuration files that will be validated by Atur:
+Below are the currently supported configuration files that will be validated by Konfigured:
 
 - `.ini`
 - `.json`

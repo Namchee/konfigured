@@ -1,4 +1,4 @@
-name: Atur
+name: Konfigured
 description: Prevent bad configuration files in your pull request
 author: Cristopher Namchee
 inputs:

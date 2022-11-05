@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"io/fs"
 
-	"github.com/Namchee/atur/internal/constant"
-	"github.com/Namchee/atur/internal/utils"
+	"github.com/Namchee/konfigured/internal/constant"
+	"github.com/Namchee/konfigured/internal/utils"
 )
 
 // Event that triggers the action

@@ -1,4 +1,4 @@
-module github.com/Namchee/atur
+module github.com/Namchee/konfigured
 
 go 1.19
 

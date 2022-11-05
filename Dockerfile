@@ -9,8 +9,8 @@ RUN go mod download
 
 COPY . .
 
-RUN  go build -a -o atur .
+RUN  go build -a -o konfigured .
 
-RUN chmod +x /ci/atur
+RUN chmod +x /ci/konfigured
 
-CMD ["/ci/atur"]
+CMD ["/ci/konfigured"]

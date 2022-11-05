@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/Namchee/atur/internal"
-	"github.com/Namchee/atur/internal/entity"
-	"github.com/Namchee/atur/internal/utils"
+	"github.com/Namchee/konfigured/internal"
+	"github.com/Namchee/konfigured/internal/entity"
+	"github.com/Namchee/konfigured/internal/utils"
 	"github.com/google/go-github/v48/github"
 	"golang.org/x/oauth2"
 )

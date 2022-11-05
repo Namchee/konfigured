@@ -5,7 +5,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/Namchee/atur/internal/constant"
+	"github.com/Namchee/konfigured/internal/constant"
 	"gotest.tools/v3/assert"
 )
 

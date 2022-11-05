@@ -1,8 +1,8 @@
 package entity
 
 import (
-	"github.com/Namchee/atur/internal/constant"
-	"github.com/Namchee/atur/internal/utils"
+	"github.com/Namchee/konfigured/internal/constant"
+	"github.com/Namchee/konfigured/internal/utils"
 )
 
 type Configuration struct {
