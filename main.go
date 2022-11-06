@@ -86,4 +86,6 @@ func main() {
 	for name := range invalids {
 		infoLogger.Println(name)
 	}
+
+	os.Exit(1)
 }
