@@ -10,7 +10,7 @@ type Configuration struct {
 }
 
 func CreateConfiguration() (*Configuration, error) {
-	token := utils.ReadEnvString("TOKEN")
+	token := utils.ReadEnvString("INPUT_TOKEN")
 
 	if token == "" {
 		return nil, constant.ErrMissingToken

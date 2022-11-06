@@ -24,7 +24,7 @@ func TestCreateConfiguration(t *testing.T) {
 		{
 			name: "success",
 			env: map[string]string{
-				"TOKEN": "access-token",
+				"INPUT_TOKEN": "access-token",
 			},
 			want: &Configuration{
 				Token: "access-token",
