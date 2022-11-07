@@ -3,6 +3,8 @@ package internal
 import (
 	"testing"
 
+	"github.com/Namchee/konfigured/mocks"
+	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v48/github"
 	"github.com/jarcoal/httpmock"
 	"gotest.tools/v3/assert"
@@ -117,6 +119,11 @@ name = "eggs"`,
 }
 
 func TestValidateConfigurationFiles(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	client := mocks.NewMockGithub(ctrl)
+
 	args := []*github.CommitFile{
 		{
 			Filename: github.String("foobar.json"),
