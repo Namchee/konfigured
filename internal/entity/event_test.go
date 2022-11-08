@@ -6,7 +6,7 @@ import (
 	"testing/fstest"
 
 	"github.com/Namchee/konfigured/internal/constant"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestReadEvent(t *testing.T) {
@@ -65,7 +65,7 @@ func TestReadEvent(t *testing.T) {
 
 			got, err := ReadEvent(mock)
 
-			assert.DeepEqual(t, tc.want.event, got)
+			assert.Equal(t, tc.want.event, got)
 			assert.Equal(t, tc.want.err, err)
 		})
 	}

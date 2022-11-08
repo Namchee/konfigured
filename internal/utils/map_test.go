@@ -3,7 +3,7 @@ package utils
 import (
 	"testing"
 
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFilterKeysByValue(t *testing.T) {

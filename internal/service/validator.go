@@ -17,7 +17,7 @@ type ConfigurationValidator struct {
 	client internal.GithubClient
 }
 
-func NewFileValidator(
+func NewConfigurationValidator(
 	client internal.GithubClient,
 ) *ConfigurationValidator {
 	return &ConfigurationValidator{
@@ -29,8 +29,8 @@ func NewFileValidator(
 func (v *ConfigurationValidator) ValidateFiles(
 	ctx context.Context,
 	files []*github.CommitFile,
-) map[string]bool {
-	filemap := map[string]bool{}
+) []entity.Validation {
+	result := []entity.Validation{}
 
 	pool := make(chan entity.Validation, len(files))
 
@@ -55,11 +55,11 @@ func (v *ConfigurationValidator) ValidateFiles(
 		close(pool)
 	}()
 
-	for result := range pool {
-		filemap[result.Filename] = result.Valid
+	for res := range pool {
+		result = append(result, res)
 	}
 
-	return filemap
+	return result
 }
 
 // isValid verify the structure of the config file

@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestReadEnvString(t *testing.T) {

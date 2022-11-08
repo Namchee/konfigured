@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/Namchee/konfigured/internal/constant"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateMeta(t *testing.T) {
@@ -35,7 +35,7 @@ func TestCreateMeta(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got, err := CreateMeta(tc.args)
 
-			assert.DeepEqual(t, tc.want, got)
+			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}

@@ -9,7 +9,7 @@ import (
 	"github.com/Namchee/konfigured/mocks/mock_client"
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v48/github"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestNewGithubClient(t *testing.T) {
@@ -87,7 +87,7 @@ func TestGithubClient_GetChangedFiles(t *testing.T) {
 
 			got, err := svc.GetChangedFiles(context.TODO(), 123)
 
-			assert.DeepEqual(t, tc.want, got)
+			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.wantErr, err != nil)
 		})
 	}
@@ -164,7 +164,7 @@ func TestGithubClient_GetFileContent(t *testing.T) {
 
 			got, err := svc.GetFileContent(context.TODO(), "")
 
-			assert.DeepEqual(t, tc.want, got)
+			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.wantErr, err != nil)
 		})
 	}

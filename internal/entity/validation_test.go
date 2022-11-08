@@ -3,7 +3,7 @@ package entity
 import (
 	"testing"
 
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetInvalidValidations(t *testing.T) {
@@ -28,7 +28,7 @@ func TestGetInvalidValidations(t *testing.T) {
 
 	got := GetInvalidValidations(in)
 
-	assert.DeepEqual(t, []Validation{
+	assert.Equal(t, []Validation{
 		{
 			Filename: "bar.yaml",
 			Valid:    false,

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/google/go-github/v48/github"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetSupportedFiles(t *testing.T) {
@@ -53,7 +53,7 @@ func TestGetSupportedFiles(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			got := GetSupportedFiles(tc.args)
 
-			assert.DeepEqual(t, tc.want, got)
+			assert.Equal(t, tc.want, got)
 		})
 	}
 }

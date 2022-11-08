@@ -1,170 +1,100 @@
 package internal
 
 import (
+	"context"
+	"errors"
 	"testing"
 
-	"github.com/Namchee/konfigured/mocks"
+	"github.com/Namchee/konfigured/mocks/mock_client"
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v48/github"
-	"github.com/jarcoal/httpmock"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestIsValid(t *testing.T) {
-	type args struct {
-		ext     string
-		content string
-	}
+func TestNewConfigurationValidator(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{
-			name: "valid INI file",
-			args: args{
-				ext: "ini",
-				content: `[ample]
-key="value"
-num=123`,
-			},
-			want: true,
-		},
-		{
-			name: "invalid JSON file",
-			args: args{
-				ext:     "json",
-				content: "{",
-			},
-			want: false,
-		},
-		{
-			name: "valid JSON file",
-			args: args{
-				ext:     "json",
-				content: `{"foo": "bar"}`,
-			},
-			want: true,
-		},
-		{
-			name: "invalid YAML file",
-			args: args{
-				ext: "yaml",
-				content: `
-foo:
-  - bar
-  baz`,
-			},
-			want: false,
-		},
-		{
-			name: "valid YAML file",
-			args: args{
-				ext: "yaml",
-				content: `
-foo:
-  - bar`,
-			},
-			want: true,
-		},
-		{
-			name: "YML alias",
-			args: args{
-				ext: "yml",
-				content: `
-foo:
-  - bar`,
-			},
-			want: true,
-		},
-		{
-			name: "invalid TOML file",
-			args: args{
-				ext: "toml",
-				content: `key = "value"
-[]`,
-			},
-			want: false,
-		},
-		{
-			name: "valid TOML file",
-			args: args{
-				ext: "toml",
-				content: `foo = "bar"
+	client := mock_client.NewMockGithubClient(ctrl)
 
-[map]
-key = "value"
-bilangan = 123
-
-[a.b]
-c = [1, 2, 3]
-
-[[items]]
-
-[[items]]
-name = "eggs"`,
-			},
-			want: true,
-		},
-	}
-
-	for _, tc := range tests {
-		t.Run(tc.name, func(t *testing.T) {
-			got := isValid(tc.args.ext, tc.args.content)
-
-			assert.Equal(t, tc.want, got)
-		})
-	}
+	assert.NotPanics(t, func() {
+		NewConfigurationValidator(client)
+	})
 }
 
 func TestValidateConfigurationFiles(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	client := mocks.NewMockGithub(ctrl)
+	type response struct {
+		content *github.RepositoryContent
+		err     error
+	}
+
+	files := map[string]response{
+		"foobar.json": {
+			content: &github.RepositoryContent{
+				Content: github.String("{"),
+			},
+			err: nil,
+		},
+		"sample.toml": {
+			content: &github.RepositoryContent{
+				Content: github.String(`key = "value"`),
+			},
+			err: nil,
+		},
+		"config.yaml": {
+			content: &github.RepositoryContent{
+				Content: github.String("key: value"),
+			},
+			err: nil,
+		},
+		"nested/config.yaml": {
+			content: &github.RepositoryContent{
+				Content: github.String(""),
+			},
+			err: errors.New("fail"),
+		},
+		"encoding.ini": {
+			content: &github.RepositoryContent{
+				Content:  github.String(""),
+				Encoding: github.String("magic"),
+			},
+			err: nil,
+		},
+	}
 
 	args := []*github.CommitFile{
 		{
 			Filename: github.String("foobar.json"),
-			RawURL:   github.String("https://www.google.com"),
 		},
 		{
 			Filename: github.String("sample.toml"),
-			RawURL:   github.String("https://www.yahoo.com"),
 		},
 		{
 			Filename: github.String("config.yaml"),
-			RawURL:   github.String("https://www.facebook.com"),
+		},
+		{
+			Filename: github.String("nested/config.yaml"),
+		},
+		{
+			Filename: github.String("encoding.ini"),
 		},
 	}
 
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+	client := mock_client.NewMockGithubClient(ctrl)
 
-	httpmock.RegisterResponder(
-		"GET",
-		"https://www.google.com",
-		httpmock.NewBytesResponder(200, []byte("{")),
-	)
+	for filename, resp := range files {
+		client.EXPECT().GetFileContent(gomock.Any(), filename).
+			Return(resp.content, resp.err)
+	}
 
-	httpmock.RegisterResponder(
-		"GET",
-		"https://www.yahoo.com",
-		httpmock.NewBytesResponder(200, []byte(`key = "value"`)),
-	)
+	validator := &ConfigurationValidator{
+		client: client,
+	}
 
-	httpmock.RegisterResponder(
-		"GET",
-		"https://www.facebook.com",
-		httpmock.NewBytesResponder(200, []byte("foo: bar")),
-	)
+	got := validator.ValidateFiles(context.TODO(), args)
 
-	result := ValidateConfigurationFiles(args)
-
-	assert.Equal(t, 3, len(result))
-	assert.Equal(t, 3, httpmock.GetTotalCallCount())
-	assert.Equal(t, result["foobar.json"], false)
-	assert.Equal(t, result["sample.toml"], true)
-	assert.Equal(t, result["config.yaml"], true)
+	assert.Equal(t, 5, len(got))
 }

@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Namchee/konfigured/internal/constant"
-	"gotest.tools/v3/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCreateConfiguration(t *testing.T) {
@@ -42,7 +42,7 @@ func TestCreateConfiguration(t *testing.T) {
 
 			got, err := CreateConfiguration()
 
-			assert.DeepEqual(t, tc.want, got)
+			assert.Equal(t, tc.want, got)
 			assert.Equal(t, tc.wantErr, err)
 		})
 	}
