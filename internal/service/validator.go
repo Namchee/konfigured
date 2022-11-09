@@ -1,4 +1,4 @@
-package internal
+package service
 
 import (
 	"bytes"
@@ -10,6 +10,16 @@ import (
 	"github.com/Namchee/konfigured/internal/utils"
 	"github.com/google/go-github/v48/github"
 	"github.com/spf13/viper"
+)
+
+var (
+	supportedExtensions = []string{
+		"ini",
+		"json",
+		"yaml",
+		"yml",
+		"toml",
+	}
 )
 
 // ConfigurationValidator is a service that validates configuration files
@@ -60,6 +70,23 @@ func (v *ConfigurationValidator) ValidateFiles(
 	}
 
 	return result
+}
+
+// GetSupportedFiles returns list of of supported configuration files
+func (v *ConfigurationValidator) GetSupportedFiles(
+	files []*github.CommitFile,
+) []*github.CommitFile {
+	supportedFiles := []*github.CommitFile{}
+
+	for _, file := range files {
+		ext := utils.GetExtension(file.GetFilename())
+
+		if utils.Contains(supportedExtensions, ext) {
+			supportedFiles = append(supportedFiles, file)
+		}
+	}
+
+	return supportedFiles
 }
 
 // isValid verify the structure of the config file

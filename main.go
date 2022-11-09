@@ -5,9 +5,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/Namchee/konfigured/internal"
 	"github.com/Namchee/konfigured/internal/client"
 	"github.com/Namchee/konfigured/internal/entity"
+	"github.com/Namchee/konfigured/internal/service"
 	"github.com/Namchee/konfigured/internal/utils"
 	"github.com/google/go-github/v48/github"
 	"golang.org/x/oauth2"
@@ -60,28 +60,23 @@ func main() {
 		github.Repositories,
 	)
 
-	files, _, err := client.PullRequests.ListFiles(
-		ctx,
-		meta.Owner,
-		meta.Name,
-		event.Number,
-		&github.ListOptions{},
-	)
+	files, err := client.GetChangedFiles(ctx, event.Number)
 
 	if err != nil {
 		errorLogger.Fatalf("Failed to fetch list of file changes: %s", err.Error())
 	}
 
-	supportedFiles := utils.GetSupportedFiles(files)
+	validator := service.NewConfigurationValidator(client)
+	supportedFiles := validator.GetSupportedFiles(files)
 
-	infoLogger.Printf("Found %d supported configuration files\n", len(supportedFiles))
+	infoLogger.Printf("Found %d supported configuration files", len(supportedFiles))
 
 	if len(supportedFiles) == 0 {
-		return
+		os.Exit(0)
 	}
 
-	result := internal.ValidateConfigurationFiles(supportedFiles)
-	invalids := utils.FilterKeysByValue(result, false)
+	result := validator.ValidateFiles(ctx, supportedFiles)
+	invalids := entity.GetInvalidValidations(result)
 
 	if len(invalids) == 0 {
 		infoLogger.Println("All configuration files are valid!")
