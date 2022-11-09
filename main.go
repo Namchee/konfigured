@@ -86,8 +86,8 @@ func main() {
 	infoLogger.Printf("Found %d malformed configuration files\n", len(invalids))
 	infoLogger.Println("Below are the list of malformed configuration files:")
 
-	for name := range invalids {
-		infoLogger.Println(name)
+	for _, file := range invalids {
+		infoLogger.Println(file.Filename)
 	}
 
 	os.Exit(1)
