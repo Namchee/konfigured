@@ -41,11 +41,16 @@ func TestReadEvent(t *testing.T) {
 		{
 			name:     "should return correctly",
 			path:     "/test.json",
-			mockFile: []byte(`{ "action": "opened", "number": 1 }`),
+			mockFile: []byte(`{ "action": "opened", "number": 1, "pull_request": { "head": { "ref": "sample-branch" } } }`),
 			want: want{
 				event: &Event{
 					Action: "opened",
 					Number: 1,
+					PullRequest: PullRequest{
+						Head: Branch{
+							Ref: "sample-branch",
+						},
+					},
 				},
 				err: nil,
 			},

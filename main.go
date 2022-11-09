@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Namchee/konfigured/internal"
+	"github.com/Namchee/konfigured/internal/client"
 	"github.com/Namchee/konfigured/internal/entity"
 	"github.com/Namchee/konfigured/internal/utils"
 	"github.com/google/go-github/v48/github"
@@ -36,7 +37,7 @@ func main() {
 	)
 
 	oauth := oauth2.NewClient(ctx, ts)
-	client := github.NewClient(oauth)
+	github := github.NewClient(oauth)
 
 	event, err := entity.ReadEvent(os.DirFS("/"))
 
@@ -52,7 +53,12 @@ func main() {
 		errorLogger.Fatalf("Failed to read repository metadata: %s", err.Error())
 	}
 
-	client.Repositories.GetContents()
+	client := client.NewGithubClient(
+		event.PullRequest.Head.Ref,
+		meta,
+		github.PullRequests,
+		github.Repositories,
+	)
 
 	files, _, err := client.PullRequests.ListFiles(
 		ctx,
@@ -61,8 +67,6 @@ func main() {
 		event.Number,
 		&github.ListOptions{},
 	)
-
-	client.Repositories.GetContents()
 
 	if err != nil {
 		errorLogger.Fatalf("Failed to fetch list of file changes: %s", err.Error())

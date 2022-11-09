@@ -8,12 +8,24 @@ import (
 	"github.com/Namchee/konfigured/internal/utils"
 )
 
+type Branch struct {
+	// actual branch name
+	Ref string `json:"ref"`
+}
+
+type PullRequest struct {
+	// branch head
+	Head Branch `json:"head"`
+}
+
 // Event that triggers the action
 type Event struct {
 	// action name
 	Action string `json:"action"`
 	// pull request number
 	Number int `json:"number"`
+	// pull request 'object'
+	PullRequest PullRequest `json:"pull_request"`
 }
 
 // ReadEvent reads and parse event meta definition
