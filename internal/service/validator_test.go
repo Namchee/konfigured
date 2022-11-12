@@ -5,6 +5,7 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/Namchee/konfigured/internal/entity"
 	"github.com/Namchee/konfigured/mocks/mock_client"
 	"github.com/golang/mock/gomock"
 	"github.com/google/go-github/v48/github"
@@ -18,11 +19,47 @@ func TestNewConfigurationValidator(t *testing.T) {
 	client := mock_client.NewMockGithubClient(ctrl)
 
 	assert.NotPanics(t, func() {
-		NewConfigurationValidator(client)
+		NewConfigurationValidator(&entity.Configuration{}, client)
 	})
 }
 
-func TestValidateConfigurationFiles(t *testing.T) {
+func TestConfigurationValidator_GetSupportedFiles(t *testing.T) {
+	files := []*github.CommitFile{
+		{
+			Filename: github.String("foobar.jpg"),
+		},
+		{
+			Filename: github.String("test.toml"),
+		},
+		{
+			Filename: github.String("baz.json"),
+		},
+		{
+			Filename: github.String("README"),
+		},
+		{
+			Filename: github.String("bb.ini"),
+		},
+	}
+
+	validator := &ConfigurationValidator{}
+
+	got := validator.GetSupportedFiles(files)
+
+	assert.Equal(t, []*github.CommitFile{
+		{
+			Filename: github.String("test.toml"),
+		},
+		{
+			Filename: github.String("baz.json"),
+		},
+		{
+			Filename: github.String("bb.ini"),
+		},
+	}, got)
+}
+
+func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -34,17 +71,24 @@ func TestValidateConfigurationFiles(t *testing.T) {
 	files := map[string]response{
 		"foobar.json": {
 			content: &github.RepositoryContent{
-				Content: github.String("{"),
+				Content: github.String("{\n"),
 			},
 			err: nil,
 		},
 		"sample.toml": {
 			content: &github.RepositoryContent{
-				Content: github.String(`key = "value"`),
+				Content: github.String(`key = "value"
+`),
 			},
 			err: nil,
 		},
 		"config.yaml": {
+			content: &github.RepositoryContent{
+				Content: github.String("key: value\n"),
+			},
+			err: nil,
+		},
+		"no-newline.yaml": {
 			content: &github.RepositoryContent{
 				Content: github.String("key: value"),
 			},
@@ -76,6 +120,9 @@ func TestValidateConfigurationFiles(t *testing.T) {
 			Filename: github.String("config.yaml"),
 		},
 		{
+			Filename: github.String("no-newline.yaml"),
+		},
+		{
 			Filename: github.String("nested/config.yaml"),
 		},
 		{
@@ -91,10 +138,17 @@ func TestValidateConfigurationFiles(t *testing.T) {
 	}
 
 	validator := &ConfigurationValidator{
+		cfg: &entity.Configuration{
+			Newline: true,
+		},
 		client: client,
 	}
 
 	got := validator.ValidateFiles(context.TODO(), args)
 
-	assert.Equal(t, 5, len(got))
+	assert.Equal(t, 6, len(got))
+
+	invalids := entity.GetInvalidValidations(got)
+
+	assert.Equal(t, 4, len(invalids))
 }
