@@ -21,7 +21,7 @@ jobs:
       - name: Validate configuration file
         uses: Namchee/konfigured@v(version)
         with:
-          access_token: <YOUR_GITHUB_ACCESS_TOKEN_HERE>
+          token: <YOUR_GITHUB_ACCESS_TOKEN_HERE>
 ```
 
 Please refer to [GitHub workflow syntax](https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#about-yaml-syntax-for-workflows) for more advanced usage.
@@ -44,6 +44,7 @@ You can customize this actions with these following options (fill it on `with` s
 | **Name**              | **Required?** | **Default Value**                       | **Description**                                                                                                                                                                                                                                                                                                            |
 | --------------------- | ------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `token`        | `true`        |                                         | [GitHub access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) to interact with the GitHub API. It is recommended to store this token with [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). **To support automatic close, labeling, and comment report, please grant a write access to the token** |
+| `newline` | `false` | `false` | Require all valid configuration file to end with newline.
 
 ## License
 
