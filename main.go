@@ -67,17 +67,14 @@ func main() {
 	}
 
 	validator := service.NewConfigurationValidator(config, client)
-	supportedFiles := validator.GetSupportedFiles(files)
+	result := validator.ValidateFiles(ctx, files)
 
-	infoLogger.Printf("Found %d supported configuration files", len(supportedFiles))
-
-	if len(supportedFiles) == 0 {
+	infoLogger.Printf("Found %d supported configuration files", len(result))
+	if len(result) == 0 {
 		os.Exit(0)
 	}
 
-	result := validator.ValidateFiles(ctx, supportedFiles)
 	invalids := entity.GetInvalidValidations(result)
-
 	if len(invalids) == 0 {
 		infoLogger.Println("All configuration files are valid!")
 		os.Exit(0)

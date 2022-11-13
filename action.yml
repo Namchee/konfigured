@@ -9,6 +9,10 @@ inputs:
     description: Requires final newline for all configuration files
     required: false
     default: false
+  include:
+    description: Files to be validated
+    required: false
+    default: '**/*.{json,ini,yaml,yml,toml}'
 runs:
   using: docker
   image: "Dockerfile"

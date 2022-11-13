@@ -45,6 +45,7 @@ You can customize this actions with these following options (fill it on `with` s
 | --------------------- | ------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `token`        | `true`        |                                         | [GitHub access token](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token) to interact with the GitHub API. It is recommended to store this token with [GitHub Secrets](https://docs.github.com/en/free-pro-team@latest/actions/reference/encrypted-secrets). **To support automatic close, labeling, and comment report, please grant a write access to the token** |
 | `newline` | `false` | `false` | Require all valid configuration file to end with newline.
+| `include` | `false` | `**/*.{json,ini,yaml,yml,toml}` | Files to be validated in [glob pattern](https://en.wikipedia.org/wiki/Glob_(programming)). If this option is omitted, the action will validate all configuration file.
 
 ## License
 

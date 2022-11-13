@@ -9,6 +9,7 @@ import (
 	"github.com/Namchee/konfigured/internal"
 	"github.com/Namchee/konfigured/internal/entity"
 	"github.com/Namchee/konfigured/internal/utils"
+	"github.com/bmatcuk/doublestar/v4"
 	"github.com/google/go-github/v48/github"
 	"github.com/spf13/viper"
 )
@@ -44,14 +45,16 @@ func (v *ConfigurationValidator) ValidateFiles(
 	ctx context.Context,
 	files []*github.CommitFile,
 ) []entity.Validation {
+	supportedFiles := v.getSupportedFiles(files)
+
 	result := []entity.Validation{}
 
-	pool := make(chan entity.Validation, len(files))
+	pool := make(chan entity.Validation, len(supportedFiles))
 
 	wg := &sync.WaitGroup{}
-	wg.Add(len(files))
+	wg.Add(len(supportedFiles))
 
-	for _, file := range files {
+	for _, file := range supportedFiles {
 		go func(ctx context.Context, f *github.CommitFile) {
 			defer wg.Done()
 
@@ -76,21 +79,30 @@ func (v *ConfigurationValidator) ValidateFiles(
 	return result
 }
 
-// GetSupportedFiles returns list of of supported configuration files
-func (v *ConfigurationValidator) GetSupportedFiles(
+// getSupportedFiles returns list of of supported configuration files
+func (v *ConfigurationValidator) getSupportedFiles(
 	files []*github.CommitFile,
 ) []*github.CommitFile {
 	supportedFiles := []*github.CommitFile{}
 
 	for _, file := range files {
-		ext := utils.GetExtension(file.GetFilename())
+		name := file.GetFilename()
+		ext := utils.GetExtension(name)
 
-		if utils.Contains(supportedExtensions, ext) {
+		if utils.Contains(supportedExtensions, ext) && v.isIncluded(name) {
 			supportedFiles = append(supportedFiles, file)
 		}
 	}
 
 	return supportedFiles
+}
+
+func (v *ConfigurationValidator) isIncluded(
+	filename string,
+) bool {
+	included, _ := doublestar.Match(v.cfg.Include, filename)
+
+	return included
 }
 
 // isValid verify the structure of the config file

@@ -22,7 +22,17 @@ func TestCreateConfiguration(t *testing.T) {
 			wantErr: constant.ErrMissingToken,
 		},
 		{
-			name: "success",
+			name: "invalid pattern",
+			env: map[string]string{
+				"INPUT_TOKEN":   "access-token",
+				"INPUT_NEWLINE": "true",
+				"INPUT_INCLUDE": "\\",
+			},
+			want:    nil,
+			wantErr: constant.ErrInvalidGlob,
+		},
+		{
+			name: "default include pattern",
 			env: map[string]string{
 				"INPUT_TOKEN":   "access-token",
 				"INPUT_NEWLINE": "true",
@@ -30,6 +40,21 @@ func TestCreateConfiguration(t *testing.T) {
 			want: &Configuration{
 				Token:   "access-token",
 				Newline: true,
+				Include: defaultPattern,
+			},
+			wantErr: nil,
+		},
+		{
+			name: "success",
+			env: map[string]string{
+				"INPUT_TOKEN":   "access-token",
+				"INPUT_NEWLINE": "true",
+				"INPUT_INCLUDE": "**/*.{json,ini}",
+			},
+			want: &Configuration{
+				Token:   "access-token",
+				Newline: true,
+				Include: "**/*.{json,ini}",
 			},
 			wantErr: nil,
 		},

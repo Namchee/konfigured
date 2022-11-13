@@ -23,42 +23,6 @@ func TestNewConfigurationValidator(t *testing.T) {
 	})
 }
 
-func TestConfigurationValidator_GetSupportedFiles(t *testing.T) {
-	files := []*github.CommitFile{
-		{
-			Filename: github.String("foobar.jpg"),
-		},
-		{
-			Filename: github.String("test.toml"),
-		},
-		{
-			Filename: github.String("baz.json"),
-		},
-		{
-			Filename: github.String("README"),
-		},
-		{
-			Filename: github.String("bb.ini"),
-		},
-	}
-
-	validator := &ConfigurationValidator{}
-
-	got := validator.GetSupportedFiles(files)
-
-	assert.Equal(t, []*github.CommitFile{
-		{
-			Filename: github.String("test.toml"),
-		},
-		{
-			Filename: github.String("baz.json"),
-		},
-		{
-			Filename: github.String("bb.ini"),
-		},
-	}, got)
-}
-
 func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -126,7 +90,16 @@ func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 			Filename: github.String("nested/config.yaml"),
 		},
 		{
+			Filename: github.String("not-included.yml"),
+		},
+		{
 			Filename: github.String("encoding.ini"),
+		},
+		{
+			Filename: github.String("picture.png"),
+		},
+		{
+			Filename: github.String("README"),
 		},
 	}
 
@@ -140,6 +113,7 @@ func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 	validator := &ConfigurationValidator{
 		cfg: &entity.Configuration{
 			Newline: true,
+			Include: "**/*.{json,ini,yaml,toml}",
 		},
 		client: client,
 	}
