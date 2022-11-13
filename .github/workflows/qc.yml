@@ -1,0 +1,21 @@
+name: Test and build
+on: [pull_request_target]
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout to the repository
+        uses: actions/checkout@v3
+      - name: Lint all files
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: latest
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: Build
+        run: go build
+      - name: Test
+        run: go test ./...
