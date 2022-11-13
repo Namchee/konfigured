@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/Namchee/konfigured/internal/entity"
@@ -52,6 +53,23 @@ func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 			},
 			err: nil,
 		},
+		"configuration.hcl": {
+			content: &github.RepositoryContent{
+				Content: github.String(`example {
+  foo = "bar"
+}
+`),
+			},
+			err: nil,
+		},
+		"invalid.hcl": {
+			content: &github.RepositoryContent{
+				Content: github.String(`example {
+  foo = "
+}`),
+			},
+			err: nil,
+		},
 		"no-newline.yaml": {
 			content: &github.RepositoryContent{
 				Content: github.String("key: value"),
@@ -84,6 +102,12 @@ func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 			Filename: github.String("config.yaml"),
 		},
 		{
+			Filename: github.String("configuration.hcl"),
+		},
+		{
+			Filename: github.String("invalid.hcl"),
+		},
+		{
 			Filename: github.String("no-newline.yaml"),
 		},
 		{
@@ -113,16 +137,18 @@ func TestConfigurationValidator_ValidateConfigurationFiles(t *testing.T) {
 	validator := &ConfigurationValidator{
 		cfg: &entity.Configuration{
 			Newline: true,
-			Include: "**/*.{json,ini,yaml,toml}",
+			Include: "**/*.{json,ini,yaml,toml,hcl}",
 		},
 		client: client,
 	}
 
 	got := validator.ValidateFiles(context.TODO(), args)
 
-	assert.Equal(t, 6, len(got))
+	assert.Equal(t, 8, len(got))
 
 	invalids := entity.GetInvalidValidations(got)
 
-	assert.Equal(t, 4, len(invalids))
+	fmt.Println(invalids)
+
+	assert.Equal(t, 5, len(invalids))
 }
