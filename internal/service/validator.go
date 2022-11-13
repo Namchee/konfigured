@@ -99,6 +99,11 @@ func (v *ConfigurationValidator) isValid(
 	file *github.CommitFile,
 ) bool {
 	fileContent, err := v.client.GetFileContent(ctx, file.GetFilename())
+	// avoid `nil` panic on next line
+	if err != nil {
+		return false
+	}
+
 	content, err := fileContent.GetContent()
 	// always false if we are not able to test it
 	if err != nil {
