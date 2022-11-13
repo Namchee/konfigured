@@ -36,6 +36,7 @@ Below are the currently supported configuration files that will be validated by 
 - `.json`
 - `.yaml`, `.yml`
 - `.toml`
+- `.hcl`
 
 ## Inputs
 

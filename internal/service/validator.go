@@ -21,6 +21,7 @@ var (
 		"yaml",
 		"yml",
 		"toml",
+		"hcl",
 	}
 )
 

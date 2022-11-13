@@ -12,7 +12,7 @@ inputs:
   include:
     description: Files to be validated
     required: false
-    default: '**/*.{json,ini,yaml,yml,toml}'
+    default: '**/*.{json,ini,yaml,yml,toml,hcl}'
 runs:
   using: docker
   image: "Dockerfile"

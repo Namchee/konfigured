@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	defaultPattern = "**/*.{json,ini,yaml,yml,toml}"
+	defaultPattern = "**/*.{json,ini,yaml,yml,toml,hcl}"
 )
 
 type Configuration struct {
