@@ -5,6 +5,7 @@ import "errors"
 // Configuration error
 var (
 	ErrMissingToken = errors.New("[Configuration] Missing GitHub access token")
+	ErrInvalidGlob  = errors.New("[Configuration] Invalid include glob pattern")
 )
 
 // Metadata error
