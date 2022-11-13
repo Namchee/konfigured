@@ -24,10 +24,12 @@ func TestCreateConfiguration(t *testing.T) {
 		{
 			name: "success",
 			env: map[string]string{
-				"INPUT_TOKEN": "access-token",
+				"INPUT_TOKEN":   "access-token",
+				"INPUT_NEWLINE": "true",
 			},
 			want: &Configuration{
-				Token: "access-token",
+				Token:   "access-token",
+				Newline: true,
 			},
 			wantErr: nil,
 		},

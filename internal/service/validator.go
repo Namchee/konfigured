@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	"strings"
 	"sync"
 
 	"github.com/Namchee/konfigured/internal"
@@ -24,13 +25,16 @@ var (
 
 // ConfigurationValidator is a service that validates configuration files
 type ConfigurationValidator struct {
+	cfg    *entity.Configuration
 	client internal.GithubClient
 }
 
 func NewConfigurationValidator(
+	cfg *entity.Configuration,
 	client internal.GithubClient,
 ) *ConfigurationValidator {
 	return &ConfigurationValidator{
+		cfg:    cfg,
 		client: client,
 	}
 }
@@ -98,6 +102,10 @@ func (v *ConfigurationValidator) isValid(
 	content, err := fileContent.GetContent()
 	// always false if we are not able to test it
 	if err != nil {
+		return false
+	}
+
+	if v.cfg.Newline && !strings.HasSuffix(content, "\n") {
 		return false
 	}
 

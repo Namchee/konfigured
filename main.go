@@ -66,7 +66,7 @@ func main() {
 		errorLogger.Fatalf("Failed to fetch list of file changes: %s", err.Error())
 	}
 
-	validator := service.NewConfigurationValidator(client)
+	validator := service.NewConfigurationValidator(config, client)
 	supportedFiles := validator.GetSupportedFiles(files)
 
 	infoLogger.Printf("Found %d supported configuration files", len(supportedFiles))

@@ -6,7 +6,8 @@ import (
 )
 
 type Configuration struct {
-	Token string
+	Token   string
+	Newline bool
 }
 
 func CreateConfiguration() (*Configuration, error) {
@@ -16,7 +17,10 @@ func CreateConfiguration() (*Configuration, error) {
 		return nil, constant.ErrMissingToken
 	}
 
+	newline := utils.ReadEnvBool("INPUT_NEWLINE")
+
 	return &Configuration{
-		Token: token,
+		Token:   token,
+		Newline: newline,
 	}, nil
 }
